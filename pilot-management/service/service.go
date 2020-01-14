@@ -1,9 +1,9 @@
 package service
 
 import (
-	"../domain/entity"
-	"../repository"
-	"../repository/impl/postgresql"
+	"pilot-management/domain/entity"
+	"pilot-management/repository"
+	"pilot-management/repository/impl/postgresql"
 )
 
 type ServiceImpl struct {

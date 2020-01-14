@@ -1,6 +1,6 @@
 package mock
 
-import "../../../domain/entity"
+import "pilot-management/domain/entity"
 
 type PilotRepoMock struct {
 	store map[string]entity.Pilot

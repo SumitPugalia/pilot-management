@@ -1,6 +1,6 @@
 package repository
 
-import "../domain/entity"
+import "pilot-management/domain/entity"
 
 type PilotRepo interface {
 	ListPilots() ([]entity.Pilot, error)

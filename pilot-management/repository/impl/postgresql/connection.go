@@ -25,9 +25,9 @@ func openConn() sqlbuilder.Database {
 }
 
 func getReadConn() sqlbuilder.Database {
-	return openConn();
+	return openConn()
 }
 
 func getWriteConn() sqlbuilder.Database {
-	return openConn();
+	return openConn()
 }

@@ -1,6 +1,6 @@
 package domain
 
-import "./entity"
+import "pilot-management/domain/entity"
 
 type Service interface {
 	ListPilots() ([]entity.Pilot, error)

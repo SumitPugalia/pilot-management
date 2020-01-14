@@ -1,12 +1,12 @@
 package main
 
 import (
-	"./service"
-	"./endpoint"
 	httpTransport "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"pilot-management/endpoint"
+	"pilot-management/service"
 )
 
 func assignRoutes(router *mux.Router) *mux.Router {

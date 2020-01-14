@@ -1,9 +1,9 @@
 package endpoint
 
 import (
-	"../domain"
 	"context"
 	"github.com/go-kit/kit/endpoint"
+	"pilot-management/domain"
 )
 
 func MakeListPilotsEndpoint(s domain.Service) endpoint.Endpoint {

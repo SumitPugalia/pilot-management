@@ -1,7 +1,7 @@
 package sqlite
 
 import (
-	"../../../domain/entity"
+	"pilot-management/domain/entity"
 	"upper.io/db.v3/lib/sqlbuilder"
 )
 
