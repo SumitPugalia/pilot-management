@@ -7,8 +7,8 @@ import (
 )
 
 type Response struct {
-	Data interface {} `json:"data"`
-	Errors []error `json:"errors"`
+	Data   interface{} `json:"data"`
+	Errors []error     `json:"errors"`
 }
 
 func EncodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {

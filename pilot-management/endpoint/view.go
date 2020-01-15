@@ -1,6 +1,6 @@
 package endpoint
 
-import "../domain/entity"
+import "pilot-management/domain/entity"
 
 type PilotView struct {
 	Id         string `json:"id"`

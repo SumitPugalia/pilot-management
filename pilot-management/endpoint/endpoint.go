@@ -1,8 +1,9 @@
 package endpoint
 
 import (
-	"../domain"
 	"context"
+	"pilot-management/domain"
+
 	"github.com/go-kit/kit/endpoint"
 )
 
