@@ -9,7 +9,6 @@ import (
 
 func MakeListPilotsEndpoint(s domain.Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
-		// req := request.(ListPilotsRequest)
 		v, err := s.ListPilots()
 		if err != nil {
 			return Response{Data: nil, Errors: []error{err}}, err

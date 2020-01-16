@@ -1,6 +1,8 @@
 package endpoint
 
-import "pilot-management/domain/entity"
+import (
+	"pilot-management/domain/entity"
+)
 
 type PilotView struct {
 	Id         string `json:"id"`
@@ -9,6 +11,9 @@ type PilotView struct {
 	SupplierId string `json:"supplierId"`
 	MarketId   string `json:"marketId"`
 	ServiceId  string `json:"serviceId"`
+	CreatedAt  int64  `json:"CreatedAt"`
+	UpdatedAt  int64  `json:"UpdatedAt"`
+	DeletedAt  int64  `json:"DeletedAt"`
 }
 
 func toPilotView(pilot entity.Pilot) PilotView {
@@ -19,5 +24,8 @@ func toPilotView(pilot entity.Pilot) PilotView {
 		SupplierId: pilot.ServiceId,
 		MarketId:   pilot.MarketId,
 		ServiceId:  pilot.ServiceId,
+		CreatedAt:  pilot.CreatedAt,
+		UpdatedAt:  pilot.UpdatedAt,
+		DeletedAt:  pilot.DeletedAt,
 	}
 }
