@@ -18,7 +18,7 @@ func openConn() sqlbuilder.Database {
 	conn, err := postgresql.Open(connSettings)
 
 	if err != nil {
-		panic("SHIT NO DB")
+		panic("connection could not be setup with the database")
 	}
 
 	return conn

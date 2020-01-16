@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"upper.io/db.v3"
 	"upper.io/db.v3/lib/sqlbuilder"
 )
 
@@ -36,7 +37,7 @@ func MakePostgresPilotRepo() PilotRepo {
 
 func (repo *PilotRepo) ListPilots() ([]entity.Pilot, error) {
 	resultSet := make([]Pilot, 0)
-	err := repo.readConn.Collection("pilots").Find().All(&resultSet)
+	err := repo.readConn.Collection("pilots").Find(db.Cond{"deleted_at =": 0}).All(&resultSet)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +50,7 @@ func (repo *PilotRepo) ListPilots() ([]entity.Pilot, error) {
 
 func (repo *PilotRepo) GetPilot(id string) (entity.Pilot, error) {
 	var pilot Pilot
-	err := repo.readConn.Collection("pilots").Find("id", id).One(&pilot)
+	err := repo.readConn.Collection("pilots").Find(db.Cond{"id =": id, "deleted_at =": 0}).One(&pilot)
 	if err != nil {
 		return entity.Pilot(pilot), err
 	}
