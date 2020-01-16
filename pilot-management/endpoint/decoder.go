@@ -6,6 +6,7 @@ import (
 	"errors"
 	"net/http"
 
+	guuid "github.com/google/uuid"
 	"github.com/gorilla/mux"
 )
 
@@ -16,11 +17,11 @@ var (
 type ListPilotsRequest struct{}
 
 type GetPilotRequest struct {
-	Id string `json:"id"`
+	Id guuid.UUID `json:"id"`
 }
 
 type DeletePilotRequest struct {
-	Id string `json:"id"`
+	Id guuid.UUID `json:"id"`
 }
 
 type CreatePilotRequest struct {
@@ -32,12 +33,12 @@ type CreatePilotRequest struct {
 }
 
 type UpdatePilotRequest struct {
-	Id         string `json:"id"`
-	UserId     string `json:"userId"`
-	CodeName   string `json:"codeName"`
-	SupplierId string `json:"supplierId"`
-	MarketId   string `json:"marketId"`
-	ServiceId  string `json:"serviceId"`
+	Id         guuid.UUID `json:"id"`
+	UserId     string     `json:"userId"`
+	CodeName   string     `json:"codeName"`
+	SupplierId string     `json:"supplierId"`
+	MarketId   string     `json:"marketId"`
+	ServiceId  string     `json:"serviceId"`
 }
 
 func DecodeListPilotsRequest(_ context.Context, r *http.Request) (interface{}, error) {
@@ -51,7 +52,7 @@ func DecodeGetPilotRequest(_ context.Context, r *http.Request) (interface{}, err
 	if !ok {
 		return nil, ErrBadRouting
 	}
-	return GetPilotRequest{Id: id}, nil
+	return GetPilotRequest{Id: guuid.MustParse(id)}, nil
 }
 
 func DecodeCreatePilotRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
@@ -73,7 +74,7 @@ func DecodeUpdatePilotRequest(_ context.Context, r *http.Request) (request inter
 	if e := json.NewDecoder(r.Body).Decode(&req); e != nil {
 		return nil, e
 	}
-	req.Id = id
+	req.Id = guuid.MustParse(id)
 	return req, nil
 }
 
@@ -83,5 +84,5 @@ func DecodeDeletePilotRequest(_ context.Context, r *http.Request) (interface{}, 
 	if !ok {
 		return nil, ErrBadRouting
 	}
-	return DeletePilotRequest{Id: id}, nil
+	return DeletePilotRequest{Id: guuid.MustParse(id)}, nil
 }

@@ -5,6 +5,7 @@ import (
 	"pilot-management/domain"
 
 	"github.com/go-kit/kit/endpoint"
+	guuid "github.com/google/uuid"
 )
 
 func MakeListPilotsEndpoint(s domain.Service) endpoint.Endpoint {
@@ -24,7 +25,7 @@ func MakeListPilotsEndpoint(s domain.Service) endpoint.Endpoint {
 func MakeGetPilotEndpoint(s domain.Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
 		req := request.(GetPilotRequest)
-		pilot, err := s.GetPilot(req.Id)
+		pilot, err := s.GetPilot(guuid.MustParse(req.Id))
 		if err != nil {
 			return Response{Data: nil, Errors: []error{err}}, err
 		}
@@ -57,7 +58,7 @@ func MakeUpdatePilotEndpoint(s domain.Service) endpoint.Endpoint {
 func MakeDeletePilotEndpoint(s domain.Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
 		req := request.(DeletePilotRequest)
-		err := s.DeletePilot(req.Id)
+		err := s.DeletePilot(guuid.MustParse(req.Id))
 		if err != nil {
 			return Response{Data: nil, Errors: []error{err}}, err
 		}

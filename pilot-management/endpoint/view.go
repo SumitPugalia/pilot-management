@@ -2,18 +2,20 @@ package endpoint
 
 import (
 	"pilot-management/domain/entity"
+
+	guuid "github.com/google/uuid"
 )
 
 type PilotView struct {
-	Id         string `json:"id"`
-	UserId     string `json:"userId"`
-	CodeName   string `json:"codeName"`
-	SupplierId string `json:"supplierId"`
-	MarketId   string `json:"marketId"`
-	ServiceId  string `json:"serviceId"`
-	CreatedAt  int64  `json:"CreatedAt"`
-	UpdatedAt  int64  `json:"UpdatedAt"`
-	DeletedAt  int64  `json:"DeletedAt"`
+	Id         guuid.UUID `json:"id"`
+	UserId     string     `json:"userId"`
+	CodeName   string     `json:"codeName"`
+	SupplierId string     `json:"supplierId"`
+	MarketId   string     `json:"marketId"`
+	ServiceId  string     `json:"serviceId"`
+	CreatedAt  int64      `json:"CreatedAt"`
+	UpdatedAt  int64      `json:"UpdatedAt"`
+	DeletedAt  int64      `json:"DeletedAt"`
 }
 
 func toPilotView(pilot entity.Pilot) PilotView {

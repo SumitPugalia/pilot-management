@@ -1,7 +1,11 @@
 package entity
 
+import (
+	guuid "github.com/google/uuid"
+)
+
 type Pilot struct {
-	Id         string
+	Id         guuid.UUID
 	UserId     string
 	CodeName   string
 	SupplierId string

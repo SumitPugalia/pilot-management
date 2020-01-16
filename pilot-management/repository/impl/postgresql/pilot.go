@@ -16,15 +16,15 @@ type PilotRepo struct {
 }
 
 type Pilot struct {
-	Id         string `db:"id,omitempty"`
-	UserId     string `db:"user_id,omitempty"`
-	CodeName   string `db:"code_name,omitempty"`
-	SupplierId string `db:"supplier_id,omitempty"`
-	MarketId   string `db:"market_id,omitempty"`
-	ServiceId  string `db:"service_id,omitempty"`
-	CreatedAt  int64  `db:"created_at,omitempty"`
-	UpdatedAt  int64  `db:"updated_at,omitempty"`
-	DeletedAt  int64  `db:"deleted_at,omitempty"`
+	Id         guuid.UUID `db:"id,omitempty"`
+	UserId     string     `db:"user_id,omitempty"`
+	CodeName   string     `db:"code_name,omitempty"`
+	SupplierId string     `db:"supplier_id,omitempty"`
+	MarketId   string     `db:"market_id,omitempty"`
+	ServiceId  string     `db:"service_id,omitempty"`
+	CreatedAt  int64      `db:"created_at,omitempty"`
+	UpdatedAt  int64      `db:"updated_at,omitempty"`
+	DeletedAt  int64      `db:"deleted_at,omitempty"`
 }
 
 func MakePostgresPilotRepo() PilotRepo {
@@ -47,7 +47,7 @@ func (repo *PilotRepo) ListPilots() ([]entity.Pilot, error) {
 	return pilots, nil
 }
 
-func (repo *PilotRepo) GetPilot(id string) (entity.Pilot, error) {
+func (repo *PilotRepo) GetPilot(id guuid.UUID) (entity.Pilot, error) {
 	var pilot Pilot
 	err := repo.readConn.Collection("pilots").Find(db.Cond{"id =": id, "deleted_at =": 0}).One(&pilot)
 	if err != nil {
@@ -100,7 +100,7 @@ func (repo *PilotRepo) UpdatePilot(params domain.UpdatePilotParams) (entity.Pilo
 	return entity.Pilot(pilot), nil
 }
 
-func (repo *PilotRepo) DeletePilot(id string) error {
+func (repo *PilotRepo) DeletePilot(id guuid.UUID) error {
 	pilot := Pilot{
 		DeletedAt: time.Now().Unix(),
 	}
@@ -109,7 +109,7 @@ func (repo *PilotRepo) DeletePilot(id string) error {
 	return err
 }
 
-func genUUID() string {
+func genUUID() guuid.UUID {
 	id := guuid.New()
-	return id.String()
+	return id
 }

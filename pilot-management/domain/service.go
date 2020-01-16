@@ -1,6 +1,10 @@
 package domain
 
-import "pilot-management/domain/entity"
+import (
+	"pilot-management/domain/entity"
+
+	guuid "github.com/google/uuid"
+)
 
 type Service interface {
 	ListPilots() ([]entity.Pilot, error)
@@ -19,7 +23,7 @@ type CreatePilotParams struct {
 }
 
 type UpdatePilotParams struct {
-	Id         string
+	Id         guuid.UUID
 	UserId     string
 	CodeName   string
 	SupplierId string

@@ -1,6 +1,6 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE pilots (id VARCHAR PRIMARY KEY,
+CREATE TABLE pilots (id UUID PRIMARY KEY,
 	user_id VARCHAR,
 	supplier_id VARCHAR,
 	market_id VARCHAR,
