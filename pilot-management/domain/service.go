@@ -4,10 +4,10 @@ import "pilot-management/domain/entity"
 
 type Service interface {
 	ListPilots() ([]entity.Pilot, error)
-	//GetPilot(id string) (Pilot, error)
-	//CreatePilot(params CreatePilotParams) (Pilot, error)
-	//UpdatePilot(params UpdatePilotParams) (Pilot, error)
-	//DeletePilot(id string) error
+	GetPilot(id string) (entity.Pilot, error)
+	CreatePilot(params CreatePilotParams) (entity.Pilot, error)
+	UpdatePilot(params UpdatePilotParams) (entity.Pilot, error)
+	DeletePilot(id string) error
 }
 
 type CreatePilotParams struct {

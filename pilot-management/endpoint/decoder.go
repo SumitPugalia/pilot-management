@@ -3,7 +3,14 @@ package endpoint
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
+
+	"github.com/gorilla/mux"
+)
+
+var (
+	ErrBadRouting = errors.New("bad routing")
 )
 
 type ListPilotsRequest struct{}
@@ -33,19 +40,48 @@ type UpdatePilotRequest struct {
 	ServiceId  string `json:"serviceId"`
 }
 
-//func DecodeListPilotsRequest(_ context.Context, r *http.Request) (interface{}, error) {
-//	var request ListPilotsRequest
-//	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-//		return nil, err
-//	}
-//	return request, nil
-//}
+func DecodeListPilotsRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var request ListPilotsRequest
+	return request, nil
+}
 
-func MakeDecoder(request interface{}) func (_ context.Context, r *http.Request) (interface{}, error) {
-	return func (_ context.Context, r *http.Request) (interface{}, error) {
-		if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-			return nil, err
-		}
-		return request, nil
+func DecodeGetPilotRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	vars := mux.Vars(r)
+	id, ok := vars["id"]
+	if !ok {
+		return nil, ErrBadRouting
 	}
+	return GetPilotRequest{Id: id}, nil
+}
+
+func DecodeCreatePilotRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
+	var req CreatePilotRequest
+	if e := json.NewDecoder(r.Body).Decode(&req); e != nil {
+		return nil, e
+	}
+	return req, nil
+}
+
+func DecodeUpdatePilotRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
+	vars := mux.Vars(r)
+	id, ok := vars["id"]
+	if !ok {
+		return nil, ErrBadRouting
+	}
+
+	var req UpdatePilotRequest
+	if e := json.NewDecoder(r.Body).Decode(&req); e != nil {
+		return nil, e
+	}
+	req.Id = id
+	return req, nil
+}
+
+func DecodeDeletePilotRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	vars := mux.Vars(r)
+	id, ok := vars["id"]
+	if !ok {
+		return nil, ErrBadRouting
+	}
+	return DeletePilotRequest{Id: id}, nil
 }

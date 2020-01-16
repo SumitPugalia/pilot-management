@@ -1,11 +1,14 @@
 package repository
 
-import "pilot-management/domain/entity"
+import (
+	"pilot-management/domain"
+	"pilot-management/domain/entity"
+)
 
 type PilotRepo interface {
 	ListPilots() ([]entity.Pilot, error)
-	//GetPilot(id string) (Pilot, error)
-	//CreatePilot(pilot-management CreatePilotParams) (Pilot, error)
-	//UpdatePilot(pilot-management UpdatePilotParams) (Pilot, error)
-	//DeletePilot(id string) error
+	GetPilot(id string) (entity.Pilot, error)
+	CreatePilot(param domain.CreatePilotParams) (entity.Pilot, error)
+	UpdatePilot(param domain.UpdatePilotParams) (entity.Pilot, error)
+	DeletePilot(id string) error
 }
