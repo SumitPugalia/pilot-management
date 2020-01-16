@@ -1,6 +1,7 @@
 package postgresql
 
 import (
+	"fmt"
 	"pilot-management/domain"
 	"pilot-management/domain/entity"
 	"time"
@@ -52,7 +53,8 @@ func (repo *PilotRepo) GetPilot(id string) (entity.Pilot, error) {
 	var pilot Pilot
 	err := repo.readConn.Collection("pilots").Find(db.Cond{"id =": id, "deleted_at =": 0}).One(&pilot)
 	if err != nil {
-		return entity.Pilot(pilot), err
+		fmt.Println(err)
+		return entity.Pilot{}, err
 	}
 	return entity.Pilot(pilot), nil
 }

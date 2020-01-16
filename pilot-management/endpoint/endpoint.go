@@ -2,6 +2,7 @@ package endpoint
 
 import (
 	"context"
+	"fmt"
 	"pilot-management/domain"
 
 	"github.com/go-kit/kit/endpoint"
@@ -25,7 +26,10 @@ func MakeGetPilotEndpoint(s domain.Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
 		req := request.(GetPilotRequest)
 		pilot, err := s.GetPilot(req.Id)
+
+		fmt.Println("I am Here")
 		if err != nil {
+			fmt.Println(err)
 			return Response{Data: nil, Errors: []error{err}}, err
 		}
 		return Response{Data: toPilotView(pilot), Errors: nil}, nil
