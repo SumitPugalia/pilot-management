@@ -1,12 +1,11 @@
 package postgresql
 
 import (
-	"math/rand"
 	"pilot-management/domain"
 	"pilot-management/domain/entity"
-	"strconv"
 	"time"
 
+	guuid "github.com/google/uuid"
 	"upper.io/db.v3"
 	"upper.io/db.v3/lib/sqlbuilder"
 )
@@ -59,7 +58,7 @@ func (repo *PilotRepo) GetPilot(id string) (entity.Pilot, error) {
 
 func (repo *PilotRepo) CreatePilot(params domain.CreatePilotParams) (entity.Pilot, error) {
 	pilot := Pilot{
-		Id:         strconv.Itoa(rand.Int()),
+		Id:         genUUID(),
 		UserId:     params.UserId,
 		CodeName:   params.CodeName,
 		SupplierId: params.SupplierId,
@@ -108,4 +107,9 @@ func (repo *PilotRepo) DeletePilot(id string) error {
 	res := repo.writeConn.Collection("pilots").Find("id", id)
 	err := res.Update(pilot)
 	return err
+}
+
+func genUUID() string {
+	id := guuid.New()
+	return id.String()
 }
