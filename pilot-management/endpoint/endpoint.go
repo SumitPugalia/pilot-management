@@ -54,6 +54,17 @@ func MakeUpdatePilotEndpoint(s domain.Service) endpoint.Endpoint {
 	}
 }
 
+func MakeStatePilotEndpoint(s domain.Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (interface{}, error) {
+		req := request.(StatePilotRequest)
+		pilot, err := s.StatePilot(req.Id, req.State)
+		if err != nil {
+			return Response{Data: nil, Errors: []error{err}}, err
+		}
+		return Response{Data: toPilotView(pilot), Errors: nil}, nil
+	}
+}
+
 func MakeDeletePilotEndpoint(s domain.Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
 		req := request.(DeletePilotRequest)

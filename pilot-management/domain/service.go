@@ -7,6 +7,7 @@ type Service interface {
 	GetPilot(id string) (entity.Pilot, error)
 	CreatePilot(params CreatePilotParams) (entity.Pilot, error)
 	UpdatePilot(params UpdatePilotParams) (entity.Pilot, error)
+	StatePilot(id string, state string) (entity.Pilot, error)
 	DeletePilot(id string) error
 }
 

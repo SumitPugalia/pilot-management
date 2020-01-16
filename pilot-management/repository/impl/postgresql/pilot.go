@@ -23,6 +23,7 @@ type Pilot struct {
 	SupplierId string `db:"supplier_id,omitempty"`
 	MarketId   string `db:"market_id,omitempty"`
 	ServiceId  string `db:"service_id,omitempty"`
+	State      string `db:"state,omitempty"`
 	CreatedAt  int64  `db:"created_at,omitempty"`
 	UpdatedAt  int64  `db:"updated_at,omitempty"`
 	DeletedAt  int64  `db:"deleted_at,omitempty"`
@@ -52,7 +53,7 @@ func (repo *PilotRepo) GetPilot(id string) (entity.Pilot, error) {
 	var pilot Pilot
 	err := repo.readConn.Collection("pilots").Find(db.Cond{"id =": id, "deleted_at =": 0}).One(&pilot)
 	if err != nil {
-		return entity.Pilot(pilot), err
+		return entity.Pilot{}, err
 	}
 	return entity.Pilot(pilot), nil
 }
@@ -63,6 +64,7 @@ func (repo *PilotRepo) CreatePilot(params domain.CreatePilotParams) (entity.Pilo
 		UserId:     params.UserId,
 		CodeName:   params.CodeName,
 		SupplierId: params.SupplierId,
+		State:      "idle",
 		MarketId:   params.MarketId,
 		ServiceId:  params.ServiceId,
 		CreatedAt:  time.Now().Unix(),
@@ -70,7 +72,7 @@ func (repo *PilotRepo) CreatePilot(params domain.CreatePilotParams) (entity.Pilo
 
 	_, err := repo.writeConn.Collection("pilots").Insert(pilot)
 	if err != nil {
-		return entity.Pilot(pilot), err
+		return entity.Pilot{}, err
 	}
 
 	return entity.Pilot(pilot), nil
@@ -90,12 +92,33 @@ func (repo *PilotRepo) UpdatePilot(params domain.UpdatePilotParams) (entity.Pilo
 	err := res.Update(pilot)
 
 	if err != nil {
-		return entity.Pilot(pilot), err
+		return entity.Pilot{}, err
 	}
 
 	err = repo.readConn.Collection("pilots").Find("id", params.Id).One(&pilot)
 	if err != nil {
-		return entity.Pilot(pilot), err
+		return entity.Pilot{}, err
+	}
+
+	return entity.Pilot(pilot), nil
+}
+
+func (repo *PilotRepo) StatePilot(id string, state string) (entity.Pilot, error) {
+	pilot := Pilot{
+		State:     state,
+		UpdatedAt: time.Now().Unix(),
+	}
+
+	res := repo.writeConn.Collection("pilots").Find("id", id)
+	err := res.Update(pilot)
+
+	if err != nil {
+		return entity.Pilot{}, err
+	}
+
+	err = repo.readConn.Collection("pilots").Find("id", id).One(&pilot)
+	if err != nil {
+		return entity.Pilot{}, err
 	}
 
 	return entity.Pilot(pilot), nil

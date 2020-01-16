@@ -40,6 +40,11 @@ type UpdatePilotRequest struct {
 	ServiceId  string `json:"serviceId"`
 }
 
+type StatePilotRequest struct {
+	Id    string `json:"id"`
+	State string `json:"state"`
+}
+
 func DecodeListPilotsRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var request ListPilotsRequest
 	return request, nil
@@ -74,6 +79,20 @@ func DecodeUpdatePilotRequest(_ context.Context, r *http.Request) (request inter
 		return nil, e
 	}
 	req.Id = id
+	return req, nil
+}
+
+func DecodeStatePilotRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
+	vars := mux.Vars(r)
+	id, ok := vars["id"]
+	state, okk := vars["state"]
+	if !ok || !okk {
+		return nil, ErrBadRouting
+	}
+
+	var req StatePilotRequest
+	req.Id = id
+	req.State = state
 	return req, nil
 }
 

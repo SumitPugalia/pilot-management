@@ -6,6 +6,7 @@ CREATE TABLE pilots (id VARCHAR PRIMARY KEY,
 	market_id VARCHAR,
 	service_id VARCHAR,
 	code_name VARCHAR,
+	state VARCHAR,
 	created_at BIGINT DEFAULT 0,
 	updated_at BIGINT DEFAULT 0,
 	deleted_at BIGINT DEFAULT 0

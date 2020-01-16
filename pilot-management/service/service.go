@@ -35,3 +35,7 @@ func (s ServiceImpl) UpdatePilot(params domain.UpdatePilotParams) (entity.Pilot,
 func (s ServiceImpl) DeletePilot(id string) error {
 	return s.pilotRepo.DeletePilot(id)
 }
+
+func (s ServiceImpl) StatePilot(id string, state string) (entity.Pilot, error) {
+	return s.pilotRepo.StatePilot(id, state)
+}
