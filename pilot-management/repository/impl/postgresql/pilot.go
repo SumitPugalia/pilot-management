@@ -5,6 +5,7 @@ import (
 	"pilot-management/domain"
 	"pilot-management/domain/entity"
 	"strconv"
+	"time"
 
 	"upper.io/db.v3/lib/sqlbuilder"
 )
@@ -21,6 +22,9 @@ type Pilot struct {
 	SupplierId string `db:"supplier_id,omitempty"`
 	MarketId   string `db:"market_id,omitempty"`
 	ServiceId  string `db:"service_id,omitempty"`
+	CreatedAt  int64  `db:"created_at,omitempty"`
+	UpdatedAt  int64  `db:"updated_at,omitempty"`
+	DeletedAt  int64  `db:"deleted_at,omitempty"`
 }
 
 func MakePostgresPilotRepo() PilotRepo {
@@ -60,6 +64,7 @@ func (repo *PilotRepo) CreatePilot(params domain.CreatePilotParams) (entity.Pilo
 		SupplierId: params.SupplierId,
 		MarketId:   params.MarketId,
 		ServiceId:  params.ServiceId,
+		CreatedAt:  time.Now().Unix(),
 	}
 
 	_, err := repo.writeConn.Collection("pilots").Insert(pilot)
@@ -72,22 +77,22 @@ func (repo *PilotRepo) CreatePilot(params domain.CreatePilotParams) (entity.Pilo
 
 func (repo *PilotRepo) UpdatePilot(params domain.UpdatePilotParams) (entity.Pilot, error) {
 	pilot := Pilot{
-		Id:         params.Id,
 		UserId:     params.UserId,
 		CodeName:   params.CodeName,
 		SupplierId: params.SupplierId,
 		MarketId:   params.MarketId,
 		ServiceId:  params.ServiceId,
+		UpdatedAt:  time.Now().Unix(),
 	}
 
-	res := repo.writeConn.Collection("pilots").Find("id", pilot.Id)
+	res := repo.writeConn.Collection("pilots").Find("id", params.Id)
 	err := res.Update(pilot)
 
 	if err != nil {
 		return entity.Pilot(pilot), err
 	}
 
-	err = repo.readConn.Collection("pilots").Find("id", pilot.Id).One(&pilot)
+	err = repo.readConn.Collection("pilots").Find("id", params.Id).One(&pilot)
 	if err != nil {
 		return entity.Pilot(pilot), err
 	}
@@ -96,7 +101,10 @@ func (repo *PilotRepo) UpdatePilot(params domain.UpdatePilotParams) (entity.Pilo
 }
 
 func (repo *PilotRepo) DeletePilot(id string) error {
+	pilot := Pilot{
+		DeletedAt: time.Now().Unix(),
+	}
 	res := repo.writeConn.Collection("pilots").Find("id", id)
-	err := res.Delete()
+	err := res.Update(pilot)
 	return err
 }

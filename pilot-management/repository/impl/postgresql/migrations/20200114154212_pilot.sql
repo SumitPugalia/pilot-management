@@ -1,6 +1,15 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE pilots (id VARCHAR PRIMARY KEY, user_id VARCHAR, supplier_id VARCHAR, market_id VARCHAR, service_id VARCHAR, code_name VARCHAR);
+CREATE TABLE pilots (id VARCHAR PRIMARY KEY,
+	user_id VARCHAR,
+	supplier_id VARCHAR,
+	market_id VARCHAR,
+	service_id VARCHAR,
+	code_name VARCHAR,
+	created_at BIGINT DEFAULT 0,
+	updated_at BIGINT DEFAULT 0,
+	deleted_at BIGINT DEFAULT 0
+);
 -- +goose StatementEnd
 
 -- +goose Down

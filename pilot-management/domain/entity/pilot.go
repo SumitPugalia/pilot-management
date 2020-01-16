@@ -7,4 +7,7 @@ type Pilot struct {
 	SupplierId string
 	MarketId   string
 	ServiceId  string
+	CreatedAt  int64
+	UpdatedAt  int64
+	DeletedAt  int64
 }
