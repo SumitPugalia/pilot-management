@@ -17,16 +17,16 @@ type PilotRepo struct {
 }
 
 type Pilot struct {
-	Id         string `db:"id,omitempty"`
-	UserId     string `db:"user_id,omitempty"`
-	CodeName   string `db:"code_name,omitempty"`
-	SupplierId string `db:"supplier_id,omitempty"`
-	MarketId   string `db:"market_id,omitempty"`
-	ServiceId  string `db:"service_id,omitempty"`
-	State      string `db:"state,omitempty"`
-	CreatedAt  int64  `db:"created_at,omitempty"`
-	UpdatedAt  int64  `db:"updated_at,omitempty"`
-	DeletedAt  int64  `db:"deleted_at,omitempty"`
+	Id         string    `db:"id,omitempty"`
+	UserId     string    `db:"user_id,omitempty"`
+	CodeName   string    `db:"code_name,omitempty"`
+	SupplierId string    `db:"supplier_id,omitempty"`
+	MarketId   string    `db:"market_id,omitempty"`
+	ServiceId  string    `db:"service_id,omitempty"`
+	State      string    `db:"state,omitempty"`
+	CreatedAt  time.Time `db:"created_at,omitempty"`
+	UpdatedAt  time.Time `db:"updated_at,omitempty"`
+	Deleted    bool      `db:"deleted"`
 }
 
 func MakePostgresPilotRepo() PilotRepo {
@@ -38,36 +38,38 @@ func MakePostgresPilotRepo() PilotRepo {
 
 func (repo *PilotRepo) ListPilots() ([]entity.Pilot, error) {
 	resultSet := make([]Pilot, 0)
-	err := repo.readConn.Collection("pilots").Find(db.Cond{"deleted_at =": 0}).All(&resultSet)
+	err := repo.readConn.Collection("pilots").Find(db.Cond{"deleted =": false}).All(&resultSet)
 	if err != nil {
 		return nil, err
 	}
 	pilots := make([]entity.Pilot, 0)
 	for _, pilot := range resultSet {
-		pilots = append(pilots, entity.Pilot(pilot))
+		pilots = append(pilots, pilotRowToPilot(pilot))
 	}
 	return pilots, nil
 }
 
 func (repo *PilotRepo) GetPilot(id string) (entity.Pilot, error) {
 	var pilot Pilot
-	err := repo.readConn.Collection("pilots").Find(db.Cond{"id =": id, "deleted_at =": 0}).One(&pilot)
+	err := repo.readConn.Collection("pilots").Find(db.Cond{"id =": id, "deleted =": false}).One(&pilot)
 	if err != nil {
 		return entity.Pilot{}, err
 	}
-	return entity.Pilot(pilot), nil
+	return pilotRowToPilot(pilot), nil
 }
 
 func (repo *PilotRepo) CreatePilot(params domain.CreatePilotParams) (entity.Pilot, error) {
+	now := time.Now()
 	pilot := Pilot{
 		Id:         genUUID(),
 		UserId:     params.UserId,
 		CodeName:   params.CodeName,
 		SupplierId: params.SupplierId,
-		State:      "idle",
+		State:      "IDLE",
 		MarketId:   params.MarketId,
 		ServiceId:  params.ServiceId,
-		CreatedAt:  time.Now().Unix(),
+		CreatedAt:  now,
+		UpdatedAt:  now,
 	}
 
 	_, err := repo.writeConn.Collection("pilots").Insert(pilot)
@@ -75,7 +77,7 @@ func (repo *PilotRepo) CreatePilot(params domain.CreatePilotParams) (entity.Pilo
 		return entity.Pilot{}, err
 	}
 
-	return entity.Pilot(pilot), nil
+	return pilotRowToPilot(pilot), nil
 }
 
 func (repo *PilotRepo) UpdatePilot(params domain.UpdatePilotParams) (entity.Pilot, error) {
@@ -85,7 +87,7 @@ func (repo *PilotRepo) UpdatePilot(params domain.UpdatePilotParams) (entity.Pilo
 		SupplierId: params.SupplierId,
 		MarketId:   params.MarketId,
 		ServiceId:  params.ServiceId,
-		UpdatedAt:  time.Now().Unix(),
+		UpdatedAt:  time.Now(),
 	}
 
 	res := repo.writeConn.Collection("pilots").Find("id", params.Id)
@@ -100,13 +102,13 @@ func (repo *PilotRepo) UpdatePilot(params domain.UpdatePilotParams) (entity.Pilo
 		return entity.Pilot{}, err
 	}
 
-	return entity.Pilot(pilot), nil
+	return pilotRowToPilot(pilot), nil
 }
 
-func (repo *PilotRepo) StatePilot(id string, state string) (entity.Pilot, error) {
+func (repo *PilotRepo) ChangeStatePilot(id string, state string) (entity.Pilot, error) {
 	pilot := Pilot{
 		State:     state,
-		UpdatedAt: time.Now().Unix(),
+		UpdatedAt: time.Now(),
 	}
 
 	res := repo.writeConn.Collection("pilots").Find("id", id)
@@ -121,12 +123,12 @@ func (repo *PilotRepo) StatePilot(id string, state string) (entity.Pilot, error)
 		return entity.Pilot{}, err
 	}
 
-	return entity.Pilot(pilot), nil
+	return pilotRowToPilot(pilot), nil
 }
 
 func (repo *PilotRepo) DeletePilot(id string) error {
 	pilot := Pilot{
-		DeletedAt: time.Now().Unix(),
+		Deleted: true,
 	}
 	res := repo.writeConn.Collection("pilots").Find("id", id)
 	err := res.Update(pilot)
@@ -136,4 +138,18 @@ func (repo *PilotRepo) DeletePilot(id string) error {
 func genUUID() string {
 	id := guuid.New()
 	return id.String()
+}
+
+func pilotRowToPilot(row Pilot) entity.Pilot {
+	return entity.Pilot{
+		Id:         row.Id,
+		UserId:     row.UserId,
+		SupplierId: row.SupplierId,
+		MarketId:   row.MarketId,
+		ServiceId:  row.ServiceId,
+		CodeName:   row.CodeName,
+		State:      entity.PilotState(row.State),
+		CreatedAt:  row.CreatedAt,
+		UpdatedAt:  row.UpdatedAt,
+	}
 }

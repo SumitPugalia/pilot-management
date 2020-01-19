@@ -40,7 +40,7 @@ type UpdatePilotRequest struct {
 	ServiceId  string `json:"serviceId"`
 }
 
-type StatePilotRequest struct {
+type ChangeStatePilotRequest struct {
 	Id    string `json:"id"`
 	State string `json:"state"`
 }
@@ -82,7 +82,7 @@ func DecodeUpdatePilotRequest(_ context.Context, r *http.Request) (request inter
 	return req, nil
 }
 
-func DecodeStatePilotRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
+func DecodeChangeStatePilotRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
 	vars := mux.Vars(r)
 	id, ok := vars["id"]
 	state, okk := vars["state"]
@@ -90,7 +90,7 @@ func DecodeStatePilotRequest(_ context.Context, r *http.Request) (request interf
 		return nil, ErrBadRouting
 	}
 
-	var req StatePilotRequest
+	var req ChangeStatePilotRequest
 	req.Id = id
 	req.State = state
 	return req, nil

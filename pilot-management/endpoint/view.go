@@ -14,7 +14,6 @@ type PilotView struct {
 	State      string `json:"state"`
 	CreatedAt  int64  `json:"CreatedAt"`
 	UpdatedAt  int64  `json:"UpdatedAt"`
-	DeletedAt  int64  `json:"DeletedAt"`
 }
 
 func toPilotView(pilot entity.Pilot) PilotView {
@@ -22,12 +21,11 @@ func toPilotView(pilot entity.Pilot) PilotView {
 		Id:         pilot.Id,
 		UserId:     pilot.UserId,
 		CodeName:   pilot.CodeName,
-		SupplierId: pilot.ServiceId,
+		SupplierId: pilot.SupplierId,
 		MarketId:   pilot.MarketId,
 		ServiceId:  pilot.ServiceId,
-		State:      pilot.State,
-		CreatedAt:  pilot.CreatedAt,
-		UpdatedAt:  pilot.UpdatedAt,
-		DeletedAt:  pilot.DeletedAt,
+		State:      string(pilot.State),
+		CreatedAt:  pilot.CreatedAt.Unix(),
+		UpdatedAt:  pilot.UpdatedAt.Unix(),
 	}
 }

@@ -11,5 +11,5 @@ type PilotRepo interface {
 	CreatePilot(param domain.CreatePilotParams) (entity.Pilot, error)
 	UpdatePilot(param domain.UpdatePilotParams) (entity.Pilot, error)
 	DeletePilot(id string) error
-	StatePilot(id string, state string) (entity.Pilot, error)
+	ChangeStatePilot(id string, state string) (entity.Pilot, error)
 }

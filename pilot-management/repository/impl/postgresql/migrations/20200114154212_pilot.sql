@@ -7,9 +7,9 @@ CREATE TABLE pilots (id VARCHAR PRIMARY KEY,
 	service_id VARCHAR,
 	code_name VARCHAR,
 	state VARCHAR,
-	created_at BIGINT DEFAULT 0,
-	updated_at BIGINT DEFAULT 0,
-	deleted_at BIGINT DEFAULT 0
+	created_at timestamp,
+	updated_at timestamp,
+	deleted boolean
 );
 -- +goose StatementEnd
 

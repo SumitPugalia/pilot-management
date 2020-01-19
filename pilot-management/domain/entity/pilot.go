@@ -1,5 +1,7 @@
 package entity
 
+import "time"
+
 type Pilot struct {
 	Id         string
 	UserId     string
@@ -7,8 +9,17 @@ type Pilot struct {
 	SupplierId string
 	MarketId   string
 	ServiceId  string
-	State      string
-	CreatedAt  int64
-	UpdatedAt  int64
-	DeletedAt  int64
+	State      PilotState
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
 }
+
+type PilotState string
+
+const (
+	IdlePilotState    PilotState = "IDLE"
+	ActivePilotState  PilotState = "ACTIVE"
+	OffDutyPilotState PilotState = "OFFDUTY"
+	BreakPilotState   PilotState = "BREAK"
+	SuspendPilotState PilotState = "SUSPEND"
+)
