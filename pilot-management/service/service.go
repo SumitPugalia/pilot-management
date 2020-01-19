@@ -6,6 +6,8 @@ import (
 	"pilot-management/domain/entity"
 	"pilot-management/repository"
 	"pilot-management/repository/impl/postgresql"
+
+	"github.com/google/uuid"
 )
 
 type ServiceImpl struct {
@@ -21,7 +23,7 @@ func (s ServiceImpl) ListPilots() ([]entity.Pilot, error) {
 	return s.pilotRepo.ListPilots()
 }
 
-func (s ServiceImpl) GetPilot(id string) (entity.Pilot, error) {
+func (s ServiceImpl) GetPilot(id uuid.UUID) (entity.Pilot, error) {
 	return s.pilotRepo.GetPilot(id)
 }
 
@@ -33,11 +35,11 @@ func (s ServiceImpl) UpdatePilot(params domain.UpdatePilotParams) (entity.Pilot,
 	return s.pilotRepo.UpdatePilot(params)
 }
 
-func (s ServiceImpl) DeletePilot(id string) error {
+func (s ServiceImpl) DeletePilot(id uuid.UUID) error {
 	return s.pilotRepo.DeletePilot(id)
 }
 
-func (s ServiceImpl) ChangeStatePilot(id string, state string) (entity.Pilot, error) {
+func (s ServiceImpl) ChangeStatePilot(id uuid.UUID, state string) (entity.Pilot, error) {
 	switch state {
 	case "idle":
 		return s.pilotRepo.ChangeStatePilot(id, "IDLE")
